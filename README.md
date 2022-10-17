@@ -6,4 +6,4 @@ Decentralized exchange
 
 
 ## Test:
-<img src="./assets/test.png"></img>
+<img src="./assets/test.PNG" />

@@ -11,6 +11,13 @@ contract Exchange {
         uint256 balance
     );
 
+    event Withdraw(
+        address token,
+        address user,
+        uint256 amount,
+        uint256 balance
+    );
+
     address public feeAccount;
     uint256 public feePercent;
     // token, msg.sender, balances
@@ -32,8 +39,16 @@ contract Exchange {
         );
     }
 
-    function withdrawToken(address _tokenAddress, uint256 _amount) public{
-        IERC20(_tokenAddress).transfer(msg.msg.sender, _amount);
+    function withdrawToken(address _tokenAddress, uint256 _amount) public {
+        require(tokens[_tokenAddress][msg.sender] >= _amount);
+        IERC20(_tokenAddress).transfer(msg.sender, _amount);
+        tokens[_tokenAddress][msg.sender] -= _amount;
+        emit Withdraw(
+            _tokenAddress,
+            msg.sender,
+            _amount,
+            tokens[_tokenAddress][msg.sender]
+        );
     }
 
     function getBalanceOf(address _token, address _user)

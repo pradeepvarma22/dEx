@@ -53,27 +53,37 @@ describe("Exchange", function () {
 
   describe("Deposit", function () {
 
-    let exchange, deployer, feeAccount, account_1, account_2;
+    let exchange, deployer, feeAccount, account_1, account_2, usdtToken, inrToken;
 
     it("allowance balance", async () => {
       [exchange, deployer, feeAccount, account_1, account_2, usdtToken, inrToken] = await deployExchangeFixture()
 
-      const txn = await usdtToken.connect(account_1).approve(exchange.address, ethers.utils.parseUnits("5",18));
+      const txn = await usdtToken.connect(account_1).approve(exchange.address, ethers.utils.parseUnits("5", 18));
       await txn.wait();
-      let balance = await usdtToken.allowance(account_1.address,exchange.address );
+      let balance = await usdtToken.allowance(account_1.address, exchange.address);
       balance = ethers.utils.formatEther(balance);
       expect(balance).to.equal("5.0");
 
       balance = await inrToken.allowance(account_1.address, exchange.address);
       balance = ethers.utils.formatEther(balance);
       expect(balance).to.equal("0.0");
-
     })
 
+    it("deposit", async function () {
+
+      let txn = await exchange.connect(account_1).depositToken(usdtToken.address, 5);
+      await txn.wait();
+
+      let balance = await exchange.getBalanceOf(usdtToken.address, account_1.address);
+
+      expect(balance).to.equal(ethers.BigNumber.from("5"))
+    })
+
+    
 
 
 
-})
+  })
 
 
 

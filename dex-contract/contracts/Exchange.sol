@@ -32,6 +32,10 @@ contract Exchange {
         );
     }
 
+    function withdrawToken(address _tokenAddress, uint256 _amount) public{
+        IERC20(_tokenAddress).transfer(msg.msg.sender, _amount);
+    }
+
     function getBalanceOf(address _token, address _user)
         public
         view

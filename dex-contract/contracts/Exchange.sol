@@ -38,7 +38,7 @@ contract Exchange {
             tokens[_tokenAddress][msg.sender]
         );
     }
-    
+
     function withdrawToken(address _tokenAddress, uint256 _amount) public {
         require(tokens[_tokenAddress][msg.sender] >= _amount);
         IERC20(_tokenAddress).transfer(msg.sender, _amount);

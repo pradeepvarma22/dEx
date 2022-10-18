@@ -52,16 +52,16 @@ describe("Exchange", function () {
   })
 
   describe("Deposit", function () {
-    let exchange, deployer, feeAccount, account_1, account_2, usdtToken, inrToken ;
-
+    let exchange, deployer, feeAccount, account_1, account_2, usdtToken, inrToken, txn;
+    let depositTxn, withdrawTxn;
 
     it("allowance balance", async () => {
       [exchange, deployer, feeAccount, account_1, account_2, usdtToken, inrToken] = await deployExchangeFixture()
 
-      const txn = await usdtToken.connect(account_1).approve(exchange.address, ethers.utils.parseUnits("5", 18));
+      txn = await usdtToken.connect(account_1).approve(exchange.address, ethers.utils.parseUnits("5", 18));
       await txn.wait();
       let balance = await usdtToken.allowance(account_1.address, exchange.address);
-      balance = ethers.utils.formatUnits(balance.toString(),"ether");
+      balance = ethers.utils.formatUnits(balance.toString(), "ether");
       expect(balance).to.equal("5.0");
       balance = await inrToken.allowance(account_1.address, exchange.address);
       balance = ethers.utils.formatEther(balance);
@@ -70,28 +70,42 @@ describe("Exchange", function () {
 
     it("deposit", async function () {
 
-      let txn = await exchange.connect(account_1).depositToken(usdtToken.address, ethers.utils.parseEther("5"));
-      await txn.wait();
-
+      depositTxn = await exchange.connect(account_1).depositToken(usdtToken.address, ethers.utils.parseEther("5"));
+      depositTxn = await depositTxn.wait();
       let balance = await exchange.getBalanceOf(usdtToken.address, account_1.address);
-      balance = ethers.utils.formatUnits(balance.toString(),"ether");
-
+      balance = ethers.utils.formatUnits(balance.toString(), "ether");
       expect(balance).to.equal("5.0")
+    })
+
+    it("deposit Events", async function () {
+      const events = depositTxn.events;
+      const index = events.length - 1;
+      const args = events[index].args
+      expect(args.token).to.equal(usdtToken.address);
+      expect(args.user).to.equal(account_1.address);
+      expect(ethers.utils.formatUnits(args.amount, "ether")).to.equal("5.0");
+      expect(ethers.utils.formatUnits(args.balance, "ether")).to.equal("5.0");
     })
 
     it("Withdraw", async function () {
 
-      let txn = await exchange.connect(account_1).withdrawToken(usdtToken.address, ethers.utils.parseEther("5"));
-      await txn.wait();
+      withdrawTxn = await exchange.connect(account_1).withdrawToken(usdtToken.address, ethers.utils.parseEther("5"));
+      withdrawTxn = await withdrawTxn.wait();
       let balance = await usdtToken.balanceOf(account_1.address);
       balance = ethers.utils.formatEther(balance);
       expect(balance).to.equal("10.0")
     })
 
+    it("Withdraw Events", async function () {
+      const events = withdrawTxn.events;
+      const index = events.length - 1;
+      const args = events[index].args
+      expect(args.token).to.equal(usdtToken.address);
+      expect(args.user).to.equal(account_1.address);
+      expect(ethers.utils.formatUnits(args.amount, "ether")).to.equal("5.0");
+      expect(ethers.utils.formatUnits(args.balance, "ether")).to.equal("0.0");
+    })
+
   })
 
-
-
 });
-
-

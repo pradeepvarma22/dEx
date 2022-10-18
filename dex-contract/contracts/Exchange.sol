@@ -18,10 +18,32 @@ contract Exchange {
         uint256 balance
     );
 
+    event Order(
+        uint256 id,
+        address user,
+        address tokenGet,
+        uint256 amountGet,
+        address tokenGive,
+        uint256 amountGive,
+        uint256 timestamp
+    );
+
+    struct _Order {
+        uint256 id;
+        address user;
+        address tokenGet;
+        uint256 amountGet;
+        address tokenGive;
+        uint256 amountGive;
+        uint256 timestamp;
+    }
+
     address public feeAccount;
     uint256 public feePercent;
+    uint256 public ordersCount;
     // token, msg.sender, balances
     mapping(address => mapping(address => uint256)) public tokens;
+    mapping(uint256 => _Order) public orders;
 
     constructor(address _feeAccount, uint256 _feePercent) {
         feeAccount = _feeAccount;
@@ -40,7 +62,10 @@ contract Exchange {
     }
 
     function withdrawToken(address _tokenAddress, uint256 _amount) public {
-        require(tokens[_tokenAddress][msg.sender] >= _amount);
+        require(
+            tokens[_tokenAddress][msg.sender] >= _amount,
+            "insufficient amount"
+        );
         IERC20(_tokenAddress).transfer(msg.sender, _amount);
         tokens[_tokenAddress][msg.sender] -= _amount;
         emit Withdraw(
@@ -57,5 +82,37 @@ contract Exchange {
         returns (uint256)
     {
         return tokens[_token][_user];
+    }
+
+    function makeOrder(
+        address _tokenGet,
+        uint256 _amountGet,
+        address _tokenGive,
+        uint256 _amountGive
+    ) public {
+        require(
+            getBalanceOf(_tokenGive, msg.sender) >= _amountGive,
+            "insufficient amount"
+        );
+        ordersCount += 1;
+        orders[ordersCount] = _Order(
+            ordersCount,
+            msg.sender,
+            _tokenGet,
+            _amountGet,
+            _tokenGive,
+            _amountGive,
+            block.timestamp
+        );
+
+        emit Order(
+            ordersCount,
+            msg.sender,
+            _tokenGet,
+            _amountGet,
+            _tokenGive,
+            _amountGive,
+            block.timestamp
+        );
     }
 }

@@ -139,6 +139,26 @@ describe("Exchange", function () {
 
     })
 
+    it("Order Cancel", async function () {
+      txn = await exchange.connect(account_1).cancelOrder(1);
+      txn = await txn.wait();
+      const isCancelled = await exchange.ordersCancelled(1);
+      expect(isCancelled).to.equal(true);
+    })
+
+    it("Order Cancel Event", async function () {
+      const events = txn.events;
+      const index = events.length - 1;
+      const args = events[index].args;
+      expect(args.id).to.equal(1);
+      expect(args.user).to.equal(account_1.address)
+      expect(args.tokenGet).to.equal(inrToken.address)
+      expect(args.amountGet).to.equal(ethers.utils.parseUnits("1", 18))
+      expect(args.tokenGive).to.equal(usdtToken.address)
+      expect(args.amountGive).to.equal(ethers.utils.parseUnits("2", 18))
+      expect(args.timestamp).to.at.least(1)
+    })
+
   })
 
 });

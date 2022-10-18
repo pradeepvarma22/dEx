@@ -28,6 +28,16 @@ contract Exchange {
         uint256 timestamp
     );
 
+    event Cancel(
+        uint256 id,
+        address user,
+        address tokenGet,
+        uint256 amountGet,
+        address tokenGive,
+        uint256 amountGive,
+        uint256 timestamp
+    );
+
     struct _Order {
         uint256 id;
         address user;
@@ -41,9 +51,11 @@ contract Exchange {
     address public feeAccount;
     uint256 public feePercent;
     uint256 public ordersCount;
+
     // token, msg.sender, balances
     mapping(address => mapping(address => uint256)) public tokens;
     mapping(uint256 => _Order) public orders;
+    mapping(uint256 => bool) public ordersCancelled;
 
     constructor(address _feeAccount, uint256 _feePercent) {
         feeAccount = _feeAccount;
@@ -112,6 +124,22 @@ contract Exchange {
             _amountGet,
             _tokenGive,
             _amountGive,
+            block.timestamp
+        );
+    }
+
+    function cancelOrder(uint256 _id) public {
+        _Order storage _order = orders[_id];
+        require(msg.sender == _order.user, "unauthorized");
+        require(_order.id == _id, "There is no order");
+        ordersCancelled[_id] = true;
+        emit Cancel(
+            _order.id,
+            msg.sender,
+            _order.tokenGet,
+            _order.amountGet,
+            _order.tokenGive,
+            _order.amountGive,
             block.timestamp
         );
     }

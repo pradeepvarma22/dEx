@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Exchange {
@@ -48,6 +48,17 @@ contract Exchange {
         uint256 timestamp;
     }
 
+    event Trade(
+        uint256 id,
+        address user,
+        address creator,
+        address tokenGet,
+        uint256 amountGet,
+        address tokenGive,
+        uint256 amountGive,
+        uint256 timestamp
+    );
+
     address public feeAccount;
     uint256 public feePercent;
     uint256 public ordersCount;
@@ -56,6 +67,7 @@ contract Exchange {
     mapping(address => mapping(address => uint256)) public tokens;
     mapping(uint256 => _Order) public orders;
     mapping(uint256 => bool) public ordersCancelled;
+    mapping(uint256 => bool) public orderFilled;
 
     constructor(address _feeAccount, uint256 _feePercent) {
         feeAccount = _feeAccount;
@@ -131,7 +143,8 @@ contract Exchange {
     function cancelOrder(uint256 _id) public {
         _Order storage _order = orders[_id];
         require(msg.sender == _order.user, "unauthorized");
-        require(_order.id == _id, "There is no order");
+        require(!orderFilled[_id]);
+        require(_id <= ordersCount && _id > 0, "Order does not exist");
         ordersCancelled[_id] = true;
         emit Cancel(
             _order.id,
@@ -140,6 +153,52 @@ contract Exchange {
             _order.amountGet,
             _order.tokenGive,
             _order.amountGive,
+            block.timestamp
+        );
+    }
+
+    function fillOrder(uint256 _id) public {
+        _Order storage _order = orders[_id];
+        require(_id <= ordersCount && _id > 0, "Order does not exist");
+        require(!ordersCancelled[_id], "ordersCancelled");
+        require(!orderFilled[_id], "orderFilled");
+        require(tokens[_order.tokenGet][msg.sender] >= _order.amountGet);
+
+        _trade(
+            _order.id,
+            _order.user,
+            _order.tokenGet,
+            _order.amountGet,
+            _order.tokenGive,
+            _order.amountGive
+        );
+        orderFilled[_order.id] = true;
+    }
+
+    function _trade(
+        uint256 id,
+        address user,
+        address tokenGet,
+        uint256 amountGet,
+        address tokenGive,
+        uint256 amountGive
+    ) internal {
+        // uint256 _feeAmount = (amountGet * feePercent) / 100;
+
+        tokens[tokenGet][msg.sender] -= amountGet;
+        tokens[tokenGet][user] += amountGet;
+
+        tokens[tokenGive][user] -= amountGive;
+        tokens[tokenGive][msg.sender] += amountGive;
+
+        emit Trade(
+            id,
+            msg.sender,
+            user,
+            tokenGet,
+            amountGet,
+            tokenGive,
+            amountGive,
             block.timestamp
         );
     }

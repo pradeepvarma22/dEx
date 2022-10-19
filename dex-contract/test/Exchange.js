@@ -22,13 +22,11 @@ describe("Exchange", function () {
     await usdtToken.deployed();
 
     const INRToken = await ethers.getContractFactory("Token");
-    const inrToken = await INRToken.deploy("INR Token", "INR");
+    const inrToken = await INRToken.deploy("INR Token", "INRT");
     await inrToken.deployed();
 
-    await usdtToken.connect(deployer).transfer(account_1.address, ethers.utils.parseUnits("10", 18));
-    await usdtToken.connect(deployer).transfer(account_2.address, ethers.utils.parseUnits("10", 18));
-    await inrToken.connect(deployer).transfer(account_1.address, ethers.utils.parseUnits("10", 18));
-    await inrToken.connect(deployer).transfer(account_2.address, ethers.utils.parseUnits("10", 18));
+    await usdtToken.connect(deployer).transfer(account_1.address, ethers.utils.parseUnits("100", 18));
+    await inrToken.connect(deployer).transfer(account_2.address, ethers.utils.parseUnits("100", 18));
 
 
     return [exchange, deployer, feeAccount, account_1, account_2, usdtToken, inrToken]
@@ -93,7 +91,7 @@ describe("Exchange", function () {
       withdrawTxn = await withdrawTxn.wait();
       let balance = await usdtToken.balanceOf(account_1.address);
       balance = ethers.utils.formatEther(balance);
-      expect(balance).to.equal("10.0")
+      expect(balance).to.equal("100.0")
     })
 
     it("Withdraw Events", async function () {
@@ -140,9 +138,9 @@ describe("Exchange", function () {
     })
 
     it("Order Cancel", async function () {
-      txn = await exchange.connect(account_1).cancelOrder(1);
+      txn = await exchange.connect(account_1).cancelOrder(await exchange.ordersCount());
       txn = await txn.wait();
-      const isCancelled = await exchange.ordersCancelled(1);
+      const isCancelled = await exchange.ordersCancelled(await exchange.ordersCount());
       expect(isCancelled).to.equal(true);
     })
 
@@ -158,6 +156,44 @@ describe("Exchange", function () {
       expect(args.amountGive).to.equal(ethers.utils.parseUnits("2", 18))
       expect(args.timestamp).to.at.least(1)
     })
+
+  });
+  // account1: USDT
+  // account2: INR
+  describe("Trade", function () {
+    let exchange, deployer, feeAccount, account_1, account_2, usdtToken, inrToken, txn;
+    before(async function () {
+      [exchange, deployer, feeAccount, account_1, account_2, usdtToken, inrToken] = await deployExchangeFixture()
+      txn = await usdtToken.connect(account_1).approve(exchange.address, ethers.utils.parseUnits("3", 18));
+      await txn.wait();
+
+      txn = await inrToken.connect(account_2).approve(exchange.address, ethers.utils.parseUnits("5", 18));
+      await txn.wait();
+
+      txn = await exchange.connect(account_2).depositToken(inrToken.address, ethers.utils.parseEther("5"));
+      txn = await txn.wait();
+
+
+      txn = await exchange.connect(account_1).depositToken(usdtToken.address, ethers.utils.parseEther("3"));
+      txn = await txn.wait();
+
+      txn = await exchange.connect(account_1).makeOrder(inrToken.address, ethers.utils.parseEther("5"), usdtToken.address, ethers.utils.parseEther("3"));
+      txn = await txn.wait();
+    })
+
+    // USDT 3 == INR 5
+
+    it("fillOrder", async function () {
+      txn = await exchange.connect(account_2).fillOrder(1);
+      txn = await txn.wait();
+      expect(await exchange.orderFilled(1)).to.equal(true);
+
+      expect(await exchange.getBalanceOf(inrToken.address, account_1.address)).to.equal(ethers.utils.parseUnits("5", 18));
+
+    })
+
+
+
 
   })
 

@@ -24,7 +24,7 @@ describe("Exchange", function () {
     const INRToken = await ethers.getContractFactory("Token");
     const inrToken = await INRToken.deploy("INR Token", "INRT");
     await inrToken.deployed();
-
+ 
     await usdtToken.connect(deployer).transfer(account_1.address, ethers.utils.parseUnits("100", 18));
     await inrToken.connect(deployer).transfer(account_2.address, ethers.utils.parseUnits("100", 18));
 

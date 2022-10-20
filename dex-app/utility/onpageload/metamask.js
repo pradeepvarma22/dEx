@@ -19,4 +19,7 @@ export default async function loadMetaMask(walletState, walletDispatch) {
         walletDispatch({ type: WALLET_TYPES.SET_ERROR, payload: true });
         walletDispatch({ type: WALLET_TYPES.SET_ERROR_MSG, payload: error.toString() });
     }
+
+  
+
 }

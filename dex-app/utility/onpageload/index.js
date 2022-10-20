@@ -10,7 +10,9 @@ async function onPageLoad(walletState, walletDispatch, tokenState, tokenDispatch
     await loadMetaMask(walletState, walletDispatch);
     await loadToken(tokenDispatch, walletState.provider);
     await loadExchange(exchangeDispatch, walletState.provider)
-
+    window.ethereum.on("accountsChanged",()=>{
+        loadMetaMask(walletState, walletDispatch);
+    })
 }
 
 

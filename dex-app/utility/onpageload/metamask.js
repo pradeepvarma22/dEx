@@ -11,7 +11,8 @@ export default async function loadMetaMask(walletState, walletDispatch) {
         walletDispatch({ type: WALLET_TYPES.SET_PROVIDER, payload: provider })
         const { chainId } = await provider.getNetwork();
         walletDispatch({ type: WALLET_TYPES.SET_NETWORK, payload: chainId.toString() })
-
+        const balance = await provider.getBalance(walletAddress)
+        walletDispatch({ type: WALLET_TYPES.SET_BALANCE, payload: ethers.utils.formatUnits(balance,"18") })
     }
     catch (error) {
         console.log('ERROR at loadMetaMask', error);

@@ -15,7 +15,7 @@ export default function Main({ walletState, walletDispatch, tokenState, tokenDis
     return (
         <div>
             <div>
-                <Navbar walletState={walletState} />
+                <Navbar walletState={walletState} walletDispatch={walletDispatch} />
                 <div className="grid grid-cols-[23%_77%] w-full h-screen text-slate-50">
                     <div className='bg-slate-800'>A</div>
                     <div className='bg-slate-900'>

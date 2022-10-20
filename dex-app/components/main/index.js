@@ -1,14 +1,12 @@
 import { useEffect } from "react"
 import { onPageLoad } from "../../utility/onpageload"
 
-export default function Main({ walletState, walletDispatch, tokenState, tokenDispatch }) {
+export default function Main({ walletState, walletDispatch, tokenState, tokenDispatch, exchangeState, exchangeDispatch }) {
 
     useEffect(() => {
-        onPageLoad(walletState, walletDispatch, tokenState, tokenDispatch)
+        onPageLoad(walletState, walletDispatch, tokenState, tokenDispatch, exchangeState, exchangeDispatch)
 
     }, [])
-    
-
 
     return (
         <div>

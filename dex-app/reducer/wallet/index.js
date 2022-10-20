@@ -11,6 +11,7 @@ const walletReducer = (state, action) => {
         case WALLET_TYPES.SET_LOADING: return { ...state, loading: action.payload }
         case WALLET_TYPES.SET_NETWORK: return { ...state, network: action.payload }
         case WALLET_TYPES.SET_BALANCE: return { ...state, balance: action.payload }
+        case WALLET_TYPES.SET_SYMBOL: return { ...state, symbol: action.payload }
         default: return state;
     }
 }
@@ -23,6 +24,7 @@ const WALLET_INITIAL_STATE = {
     walletAddress: "",
     network: "",
     provider: null,
+    symbol: "MATIC",
     balance: ethers.utils.formatUnits(0, 18)
 }
 

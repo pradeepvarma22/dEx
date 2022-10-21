@@ -8,6 +8,8 @@ const exchangeReducer = (state, action) => {
         case EXCHANGE_TYPES.SET_ERROR: return { ...state, error: action.payload }
         case EXCHANGE_TYPES.SET_ERROR_MSG: return { ...state, errorMsg: action.payload }
         case EXCHANGE_TYPES.SET_LOADING: return { ...state, loading: action.payload }
+        case EXCHANGE_TYPES.SET_BALANCE_VARMA: return { ...state, balancevarma: action.payload }
+        case EXCHANGE_TYPES.SET_BALANE_TOKEN2: return { ...state, balanceToken2: action.payload }
 
         default: return state;
     }
@@ -20,6 +22,8 @@ const EXCHANGE_INITIAL_STATE = {
     errorMsg: "Something went wrong",
     contractAddress: "",
     contractProvider: null,
+    balancevarma: 0,
+    balanceToken2: 0
 
 
 }

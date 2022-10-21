@@ -4,6 +4,7 @@ import { onPageLoad } from "../../utility/onpageload"
 import Balance from "../balance"
 import Market from "../market"
 import Navbar from "../navbar"
+import Order from "../order"
 
 export default function Main({ walletState, walletDispatch, tokenState, tokenDispatch, exchangeState, exchangeDispatch }) {
 
@@ -36,6 +37,14 @@ export default function Main({ walletState, walletDispatch, tokenState, tokenDis
                             exchangeState={exchangeState}
                             exchangeDispatch={exchangeDispatch}
 
+                        />
+                        <Order
+                            walletState={walletState}
+                            walletDispatch={walletDispatch}
+                            tokenState={tokenState}
+                            tokenDispatch={tokenDispatch}
+                            exchangeState={exchangeState}
+                            exchangeDispatch={exchangeDispatch}
                         />
                     </div>
                     <div className='bg-slate-900'>

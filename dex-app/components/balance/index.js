@@ -28,15 +28,16 @@ export default function Balance({ walletState, walletDispatch, tokenState, token
 
             <div className="py-3 px-2">
                 <div>
-                    <div className="flex space-x-2">
-                        <div>
-                            <button type="button" onClick={handlePaymentType} value="Deposit" className="inline-block px-3 py-1.5 bg-slate-800 text-white font-medium text-xs leading-tight uppercase rounded shadow-lg hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Deposit</button>
-                            <button type="button" onClick={handlePaymentType} value="Withdraw" className="inline-block px-3 py-1.5 bg-slate-800 text-white font-medium text-xs leading-tight uppercase rounded shadow-lg hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Withdraw</button>
+                    <div className="flex gap-0.5">
+                        <div>{paymentType}</div>
+                        <div className="flex px-[34%]">
+                            <button type="button" onClick={handlePaymentType} value="Deposit" className="bg-slate-700 hover:bg-gray-400 text-white py-1 px-2 rounded-l">Deposit</button>
+                            <button type="button" onClick={handlePaymentType} value="Withdraw" className="bg-slate-700 hover:bg-gray-400 text-white py-1 px-2 rounded-r">Withdraw</button>
                         </div>
                     </div>
 
                     <div className="px-[28%] py-2 text-lg">
-                        {paymentType}
+
                     </div>
                     <div className="pr-5">
                         Token: {defaultCurrency}

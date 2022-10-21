@@ -3,6 +3,8 @@ Decentralized exchange
 
 
 
+## Deposit
+<img src="./assets/deposit.PNG" />
 
 
 ## Test:

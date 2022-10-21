@@ -10,6 +10,9 @@ const exchangeReducer = (state, action) => {
         case EXCHANGE_TYPES.SET_LOADING: return { ...state, loading: action.payload }
         case EXCHANGE_TYPES.SET_BALANCE_VARMA: return { ...state, balancevarma: action.payload }
         case EXCHANGE_TYPES.SET_BALANE_TOKEN2: return { ...state, balanceToken2: action.payload }
+        case EXCHANGE_TYPES.SET_ALL_ORDER_EVENTS: return { ...state, allOrderEvents: action.payload }
+        case EXCHANGE_TYPES.SET_ALL_ORDER_EVENTS_ACTIVE: return { ...state, allOrderEventsActive: action.payload }
+
 
         default: return state;
     }
@@ -23,8 +26,9 @@ const EXCHANGE_INITIAL_STATE = {
     contractAddress: "",
     contractProvider: null,
     balancevarma: 0,
-    balanceToken2: 0
-
+    balanceToken2: 0,
+    allOrderEventsActive:false,
+    allOrderEvents: null
 
 }
 

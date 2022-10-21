@@ -5,6 +5,7 @@ import Balance from "../balance"
 import Market from "../market"
 import Navbar from "../navbar"
 import Order from "../order"
+import OrderBook from "../orderbook"
 
 export default function Main({ walletState, walletDispatch, tokenState, tokenDispatch, exchangeState, exchangeDispatch }) {
 
@@ -48,7 +49,14 @@ export default function Main({ walletState, walletDispatch, tokenState, tokenDis
                         />
                     </div>
                     <div className='bg-slate-900'>
-                        B
+                        <OrderBook
+                            walletState={walletState}
+                            walletDispatch={walletDispatch}
+                            tokenState={tokenState}
+                            tokenDispatch={tokenDispatch}
+                            exchangeState={exchangeState}
+                            exchangeDispatch={exchangeDispatch}
+                        />
                     </div>
                 </div>
             </div >

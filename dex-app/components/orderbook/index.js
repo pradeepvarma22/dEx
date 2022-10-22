@@ -84,9 +84,8 @@ export default function OrderBook({ walletState, walletDispatch, tokenState, tok
             exchangeDispatch({ type: EXCHANGE_TYPES.SET_ALL_SELL_ORDERS, payload: allSellOrders })
             exchangeDispatch({ type: EXCHANGE_TYPES.SET_CANDLE_CHART, payload: allSellOrdersGraph })
 
-            console.log(allSellOrdersGraph)
-            console.log(typeof (allSellOrdersGraph))
 
+            
         }
 
     }

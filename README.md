@@ -28,7 +28,7 @@ yarn hardhat run test
 <img src="./assets/test.PNG" />
 
 
-## Setting up the development environment
+## Development Environment
 https://user-images.githubusercontent.com/28341697/197338606-fff71b70-c77f-42e7-ba51-42622dc76af1.mp4
 
 

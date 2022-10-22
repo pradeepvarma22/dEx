@@ -1,7 +1,9 @@
 import { ethers } from "ethers";
 import { useState } from "react";
+
 import { EXCHANGE_CONTRACT_ABI, EXCHANGE_CONTRACT_ADDRESS } from "../../constants/exchange";
 import { TOKEN_INRT_CONTACT_ADDRESS, TOKEN_USDT_CONTACT_ADDRESS, TOKEN_VARMA_CONTACT_ADDRESS } from "../../constants/tokens";
+import { EXCHANGE_TYPES } from "../../reducer/contracts/exchange/exchangeTypes";
 
 export default function Order({ walletState, walletDispatch, tokenState, tokenDispatch, exchangeState, exchangeDispatch }) {
     const [defOrder, setDefOrder] = useState("b")
@@ -11,6 +13,8 @@ export default function Order({ walletState, walletDispatch, tokenState, tokenDi
     // TOKEN_VARMA_CONTACT_ADDRESS
 
     function buyHandler(e) {
+
+
         // call makeTrade
         let tokens = []
         tokens.push(TOKEN_VARMA_CONTACT_ADDRESS)
@@ -25,6 +29,8 @@ export default function Order({ walletState, walletDispatch, tokenState, tokenDi
 
     function sellHandler(e) {
         // call makeTrade
+
+
         let tokens = []
         tokens.push(TOKEN_VARMA_CONTACT_ADDRESS)
         if (tokenState.navtokenstate == "USDT") {
@@ -33,7 +39,7 @@ export default function Order({ walletState, walletDispatch, tokenState, tokenDi
         else {
             tokens.push(TOKEN_INRT_CONTACT_ADDRESS)
         }
-        makeBuyOrder(walletState.provider, tokens)
+        makeSellOrder(walletState.provider, tokens)
     }
 
     return (
@@ -78,8 +84,8 @@ export default function Order({ walletState, walletDispatch, tokenState, tokenDi
 
             let txn = await contractE.makeOrder(tokenGet, amountGet, tokenGive, amountGive)
             txn = await txn.wait();
-            console.log('done', txn);
 
+            exchangeDispatch({ type: EXCHANGE_TYPES.SET_BUY_OR_SELL_DONE, payload: true })
         }
     }
 
@@ -95,7 +101,9 @@ export default function Order({ walletState, walletDispatch, tokenState, tokenDi
 
             let txn = await contractE.makeOrder(tokenGet, amountGet, tokenGive, amountGive)
             txn = await txn.wait();
-            console.log('done', txn);
+
+            exchangeDispatch({ type: EXCHANGE_TYPES.SET_BUY_OR_SELL_DONE, payload: true })
+
 
         }
     }

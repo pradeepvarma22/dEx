@@ -1,6 +1,5 @@
 import { TOKEN_TYPES } from "./tokentypes"
 
-
 const tokenReducer = (state, action) => {
     switch (action.type) {
         case TOKEN_TYPES.SET_VARMA_PROVIDER: return { ...state, varmaTokenProvider: action.payload }

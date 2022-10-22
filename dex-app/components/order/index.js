@@ -75,6 +75,7 @@ export default function Order({ walletState, walletDispatch, tokenState, tokenDi
     async function makeBuyOrder(provider, tokens) {
 
         if (provider != null && tokens) {
+            exchangeDispatch({ type: EXCHANGE_TYPES.SET_BUY_OR_SELL_DONE, payload: false })
             const signer = await provider.getSigner();
             const tokenGet = tokens[0];
             const amountGet = ethers.utils.parseEther(amount);      //buy amount
@@ -92,6 +93,8 @@ export default function Order({ walletState, walletDispatch, tokenState, tokenDi
     async function makeSellOrder(provider, tokens) {
 
         if (provider != null && tokens) {
+            exchangeDispatch({ type: EXCHANGE_TYPES.SET_BUY_OR_SELL_DONE, payload: false })
+
             const signer = await provider.getSigner();
             const tokenGet = tokens[1];
             const amountGet = ethers.utils.parseEther((amount * price).toString());

@@ -74,11 +74,11 @@ async function main() {
   console.log(`Made order from ${user1.address}`)
 
   // User 1 cancels order
-  orderId = result.events[0].args.id
+/*  orderId = result.events[0].args.id
   transaction = await exchange.connect(user1).cancelOrder(orderId)
   result = await transaction.wait()
   console.log(`Cancelled order from ${user1.address}\n`)
-
+*/
   // Wait 1 second
   await wait(1)
 
@@ -123,7 +123,7 @@ async function main() {
   await wait(1)
 
   // User 1 makes 10 orders
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 8; i++) {
     transaction = await exchange.connect(user1).makeOrder(usdtToken.address, tokens(10 * i), varma.address, tokens(10))
     result = await transaction.wait()
 
@@ -132,7 +132,7 @@ async function main() {
   }
 
   // User 2 makes 10 orders
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 8; i++) {
     transaction = await exchange.connect(user2).makeOrder(varma.address, tokens(10), usdtToken.address, tokens(10 * i))
     result = await transaction.wait()
 

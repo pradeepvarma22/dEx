@@ -1,6 +1,5 @@
 import { EXCHANGE_TYPES } from "./exchangeTypes";
 
-
 const exchangeReducer = (state, action) => {
     switch (action.type) {
         case EXCHANGE_TYPES.SET_CONTRACT_ADDRESS: return { ...state, contractAddress: action.payload }

@@ -1,21 +1,14 @@
 import { ethers } from "ethers"
 import { useEffect, useState } from "react"
+import Chart from "react-google-charts";
 
 import { EXCHANGE_CONTRACT_ABI, EXCHANGE_CONTRACT_ADDRESS } from "../../constants/exchange"
 import { TOKEN_INRT_CONTACT_ADDRESS, TOKEN_USDT_CONTACT_ADDRESS, TOKEN_VARMA_CONTACT_ADDRESS } from "../../constants/tokens"
 import { EXCHANGE_TYPES } from "../../reducer/contracts/exchange/exchangeTypes";
-import Chart from "react-google-charts";
 
 // import GoogleChart from './components/GoogleChart';
 
-const data = [
-    ['', ' ', ' ', ' ', ' '],
-    ['', 20, 28, 38, 45],
-    ['', 31, 38, 55, 66],
-    ['', 50, 55, 77, 80],
-    ['', 77, 77, 66, 50],
-    ['', 68, 66, 22, 15],
-];
+
 
 
 export default function OrderBook({ walletState, walletDispatch, tokenState, tokenDispatch, exchangeState, exchangeDispatch }) {
@@ -24,7 +17,7 @@ export default function OrderBook({ walletState, walletDispatch, tokenState, tok
     useEffect(() => {
         loadDataOnpage()
 
-    }, [walletState, tokenState.navtokenstate])
+    }, [walletState, tokenState.navtokenstate, exchangeState.buyOrSell])
 
     async function loadDataOnpage() {
 
@@ -85,7 +78,8 @@ export default function OrderBook({ walletState, walletDispatch, tokenState, tok
             exchangeDispatch({ type: EXCHANGE_TYPES.SET_CANDLE_CHART, payload: allSellOrdersGraph })
 
 
-            
+
+
         }
 
     }

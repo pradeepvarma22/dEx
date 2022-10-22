@@ -6,7 +6,6 @@ A decentralized exchange allow trading with ERC20 tokens using orderbook. Users 
 ```
 Solidity [ ERC20, Exchange ]
 Next JS
-Subgraph [The Graph]
 Google Charts
 Tailwindcss
 ```

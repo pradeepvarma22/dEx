@@ -32,6 +32,7 @@ export default function OrderBook({ walletState, walletDispatch, tokenState, tok
     }
 
 
+
     async function loadAllOrdersPair(walletState, filterOption) {
 
         let searchAddress;
@@ -54,15 +55,19 @@ export default function OrderBook({ walletState, walletDispatch, tokenState, tok
             const buyOrders = allOrder.filter((order) => order.tokenGive == TOKEN_VARMA_CONTACT_ADDRESS && order.tokenGet == searchAddress)
 
             let allSellOrders = [];
-
+            let allSellOrdersGraph = Array(['', '', '', '', '']);
             sellOrders.map((order) => {
                 let price = sellOrderFilter(order)
                 const temp = {
                     ...price
                 }
                 allSellOrders.push(temp)
+                const _amountGet = ethers.utils.formatUnits(temp.amountGet, "18")
+                const _amountGive = ethers.utils.formatUnits(temp.amountGive, "18")
+                const _price = price.price
+                const tempD = ["", Number(_amountGet), Number(_price), Number(_amountGive), Number(_price)]
 
-
+                allSellOrdersGraph.push(tempD);
             })
 
             let allBuyOrders = [];
@@ -74,9 +79,13 @@ export default function OrderBook({ walletState, walletDispatch, tokenState, tok
                 allBuyOrders.push(temp)
 
             })
-            
+
             exchangeDispatch({ type: EXCHANGE_TYPES.SET_ALL_BUY_ORDERS, payload: allBuyOrders })
             exchangeDispatch({ type: EXCHANGE_TYPES.SET_ALL_SELL_ORDERS, payload: allSellOrders })
+            exchangeDispatch({ type: EXCHANGE_TYPES.SET_CANDLE_CHART, payload: allSellOrdersGraph })
+
+            console.log(allSellOrdersGraph)
+            console.log(typeof (allSellOrdersGraph))
 
         }
 
@@ -84,13 +93,13 @@ export default function OrderBook({ walletState, walletDispatch, tokenState, tok
 
     return (
         <div>
-            <div>
+            <div className="grid place-items-center">
                 <Chart
-                    width={'80%'}
-                    height={450}
+                    width={'83%'}
+                    height={455}
                     chartType="CandlestickChart"
                     loader={<div>Loading Chart</div>}
-                    data={data}
+                    data={exchangeState.candleChart}
                     options={{
                         legend: 'none',
                     }}
@@ -103,7 +112,7 @@ export default function OrderBook({ walletState, walletDispatch, tokenState, tok
                 <div>
                     <div className="grid grid-cols-2">
                         <div >
-                            <div className="px-[8%] py-5">Buy: Get Varma give usdt</div>
+                            <div className="px-[8%] py-5 font-bold">Buy: Get Varma give usdt</div>
                             <table className="table-auto">
                                 <thead>
                                     <tr>
@@ -129,7 +138,7 @@ export default function OrderBook({ walletState, walletDispatch, tokenState, tok
 
                         </div>
                         <div>
-                            <div className="px-[8%] py-5">Sell: Give Varma get usdt</div>
+                            <div className="px-[8%] py-5 font-bold">Sell: Give Varma get usdt</div>
                             <table className="table-auto">
                                 <thead>
                                     <tr>
